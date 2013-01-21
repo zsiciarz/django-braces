@@ -1,0 +1,7 @@
+[report]
+omit =
+    ../src/*
+    ../lib/*
+    *__init.py
+    *urls.py
+    */test*
