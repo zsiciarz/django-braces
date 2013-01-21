@@ -5,3 +5,4 @@ omit =
     *__init.py
     *urls.py
     */test*
+    runtests.py
