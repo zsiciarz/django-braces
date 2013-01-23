@@ -1,6 +1,10 @@
 from django.views.generic import TemplateView
 
-from braces.views import SetHeadlineMixin
+from braces.views import SetHeadlineMixin, LoginRequiredMixin
+
+
+class IndexView(TemplateView):
+    template_name = "braces/index.html"
 
 
 class MissingHeadlineView(SetHeadlineMixin, TemplateView):
@@ -18,3 +22,6 @@ class DynamicHeadlineView(SetHeadlineMixin, TemplateView):
     def get_headline(self):
         return "Quick brown fox"
 
+
+class LoginRequiredView(LoginRequiredMixin, TemplateView):
+    template_name = "braces/headline.html"

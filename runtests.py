@@ -29,6 +29,7 @@ if not settings.configured:
         ),
         SITE_ID = 1,
         ROOT_URLCONF = 'braces.tests.urls',
+        LOGIN_URL = '/',
         TEST_RUNNER = 'django_nose.NoseTestSuiteRunner',
         NOSE_ARGS = ['--stop'],
     )
