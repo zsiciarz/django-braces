@@ -1,6 +1,7 @@
 from django.views.generic import TemplateView
 
-from braces.views import SetHeadlineMixin, LoginRequiredMixin
+from braces.views import SetHeadlineMixin, LoginRequiredMixin, \
+    PermissionRequiredMixin
 
 
 class IndexView(TemplateView):
@@ -25,3 +26,23 @@ class DynamicHeadlineView(SetHeadlineMixin, TemplateView):
 
 class LoginRequiredView(LoginRequiredMixin, TemplateView):
     template_name = "braces/headline.html"
+
+
+class MissingPermissionView(PermissionRequiredMixin, TemplateView):
+    template_name = "braces/headline.html"
+
+
+class BadPermissionView(PermissionRequiredMixin, TemplateView):
+    template_name = "braces/headline.html"
+    permission_required = "this.has.more.than.one.dot"
+
+
+class AddUserPermissionView(PermissionRequiredMixin, TemplateView):
+    template_name = "braces/headline.html"
+    permission_required = "auth.add_user"
+
+
+class AddUserPermission403View(PermissionRequiredMixin, TemplateView):
+    template_name = "braces/headline.html"
+    permission_required = "auth.add_user"
+    raise_exception = True
