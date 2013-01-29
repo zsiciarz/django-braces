@@ -2,7 +2,8 @@ from django.conf.urls.defaults import include, patterns, url
 
 from .views import IndexView, MissingHeadlineView, StaticHeadlineView, \
     DynamicHeadlineView, LoginRequiredView, MissingPermissionView, \
-    BadPermissionView, AddUserPermissionView, AddUserPermission403View
+    BadPermissionView, AddUserPermissionView, AddUserPermission403View, \
+    MissingMultiplePermissionsView, BadMultiplePermissionsView
 
 
 urlpatterns = patterns('',
@@ -18,4 +19,7 @@ urlpatterns = patterns('',
     url(r'^bad_permission/$', BadPermissionView.as_view(), name='bad_permission'),
     url(r'^add_user_permission/$', AddUserPermissionView.as_view(), name='add_user_permission'),
     url(r'^add_user_permission_403/$', AddUserPermission403View.as_view(), name='add_user_permission_403'),
+
+    url(r'^missing_multiple_permissions/$', MissingMultiplePermissionsView.as_view(), name='missing_multiple_permissions'),
+    url(r'^bad_multiple_permissions/$',  BadMultiplePermissionsView.as_view(), name='bad_multiple_permissions'),
 )

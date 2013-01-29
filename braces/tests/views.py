@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView
 
 from braces.views import SetHeadlineMixin, LoginRequiredMixin, \
-    PermissionRequiredMixin
+    PermissionRequiredMixin, MultiplePermissionsRequiredMixin
 
 
 class IndexView(TemplateView):
@@ -46,3 +46,13 @@ class AddUserPermission403View(PermissionRequiredMixin, TemplateView):
     template_name = "braces/headline.html"
     permission_required = "auth.add_user"
     raise_exception = True
+
+
+class MissingMultiplePermissionsView(MultiplePermissionsRequiredMixin, TemplateView):
+    template_name = "braces/headline.html"
+
+
+class BadMultiplePermissionsView(MultiplePermissionsRequiredMixin, TemplateView):
+    template_name = "braces/headline.html"
+    permissions = ['this.is.not.a.dict']
+

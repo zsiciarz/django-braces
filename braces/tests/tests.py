@@ -68,3 +68,16 @@ class PermissionRequiredMixinTestCase(TestCase):
         self.client.login(username='test', password='foo')
         response = self.client.get(reverse('add_user_permission'))
         self.assertEqual(response.status_code, 200)
+
+
+class MultiplePermissionsRequiredMixinTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('test', 'test@example.com', 'foo')
+
+    def test_missing_permissions(self):
+        with self.assertRaises(ImproperlyConfigured):
+            self.client.get(reverse('missing_multiple_permissions'))
+
+    def test_bad_permissions(self):
+        with self.assertRaises(ImproperlyConfigured):
+            self.client.get(reverse('bad_multiple_permissions'))
