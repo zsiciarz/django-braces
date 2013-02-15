@@ -5,7 +5,8 @@ from .views import IndexView, MissingHeadlineView, StaticHeadlineView, \
     BadPermissionView, AddUserPermissionView, AddUserPermission403View, \
     MissingMultiplePermissionsView, BadMultiplePermissionsView, \
     AllMultiplePermissionsView, AllMultiplePermissions403View, \
-    AnyMultiplePermissionsView, AnyMultiplePermissions403View
+    AnyMultiplePermissionsView, AnyMultiplePermissions403View, \
+    SuperuserRequiredView, SuperuserRequired403View
 
 
 urlpatterns = patterns('',
@@ -28,4 +29,7 @@ urlpatterns = patterns('',
     url(r'^all_multiple_permissions_403/$', AllMultiplePermissions403View.as_view(), name='all_multiple_permissions_403'),
     url(r'^any_multiple_permissions/$', AnyMultiplePermissionsView.as_view(), name='any_multiple_permissions'),
     url(r'^any_multiple_permissions_403/$', AnyMultiplePermissions403View.as_view(), name='any_multiple_permissions_403'),
+
+    url(r'^superuser_required/$', SuperuserRequiredView.as_view(), name='superuser_required'),
+    url(r'^superuser_required_403/$', SuperuserRequired403View.as_view(), name='superuser_required_403'),
 )
