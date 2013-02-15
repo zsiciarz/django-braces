@@ -3,7 +3,9 @@ from django.conf.urls.defaults import include, patterns, url
 from .views import IndexView, MissingHeadlineView, StaticHeadlineView, \
     DynamicHeadlineView, LoginRequiredView, MissingPermissionView, \
     BadPermissionView, AddUserPermissionView, AddUserPermission403View, \
-    MissingMultiplePermissionsView, BadMultiplePermissionsView
+    MissingMultiplePermissionsView, BadMultiplePermissionsView, \
+    AllMultiplePermissionsView, AllMultiplePermissions403View, \
+    AnyMultiplePermissionsView, AnyMultiplePermissions403View
 
 
 urlpatterns = patterns('',
@@ -21,5 +23,9 @@ urlpatterns = patterns('',
     url(r'^add_user_permission_403/$', AddUserPermission403View.as_view(), name='add_user_permission_403'),
 
     url(r'^missing_multiple_permissions/$', MissingMultiplePermissionsView.as_view(), name='missing_multiple_permissions'),
-    url(r'^bad_multiple_permissions/$',  BadMultiplePermissionsView.as_view(), name='bad_multiple_permissions'),
+    url(r'^bad_multiple_permissions/$', BadMultiplePermissionsView.as_view(), name='bad_multiple_permissions'),
+    url(r'^all_multiple_permissions/$', AllMultiplePermissionsView.as_view(), name='all_multiple_permissions'),
+    url(r'^all_multiple_permissions_403/$', AllMultiplePermissions403View.as_view(), name='all_multiple_permissions_403'),
+    url(r'^any_multiple_permissions/$', AnyMultiplePermissionsView.as_view(), name='any_multiple_permissions'),
+    url(r'^any_multiple_permissions_403/$', AnyMultiplePermissions403View.as_view(), name='any_multiple_permissions_403'),
 )

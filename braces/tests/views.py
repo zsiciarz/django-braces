@@ -56,3 +56,33 @@ class BadMultiplePermissionsView(MultiplePermissionsRequiredMixin, TemplateView)
     template_name = "braces/headline.html"
     permissions = ['this.is.not.a.dict']
 
+
+class AllMultiplePermissionsView(MultiplePermissionsRequiredMixin, TemplateView):
+    template_name = "braces/headline.html"
+    permissions = {
+        'all': ('auth.add_user', 'auth.change_user'),
+    }
+
+
+class AllMultiplePermissions403View(MultiplePermissionsRequiredMixin, TemplateView):
+    template_name = "braces/headline.html"
+    permissions = {
+        'all': ('auth.add_user', 'auth.change_user'),
+    }
+    raise_exception = True
+
+
+class AnyMultiplePermissionsView(MultiplePermissionsRequiredMixin, TemplateView):
+    template_name = "braces/headline.html"
+    permissions = {
+        'any': ('auth.add_user', 'auth.change_user'),
+    }
+
+
+class AnyMultiplePermissions403View(MultiplePermissionsRequiredMixin, TemplateView):
+    template_name = "braces/headline.html"
+    permissions = {
+        'any': ('auth.add_user', 'auth.change_user'),
+    }
+    raise_exception = True
+

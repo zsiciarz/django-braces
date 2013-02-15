@@ -81,3 +81,51 @@ class MultiplePermissionsRequiredMixinTestCase(TestCase):
     def test_bad_permissions(self):
         with self.assertRaises(ImproperlyConfigured):
             self.client.get(reverse('bad_multiple_permissions'))
+
+    def test_all_with_no_permissions(self):
+        self.client.login(username='test', password='foo')
+        url = reverse('all_multiple_permissions')
+        response = self.client.get(url)
+        expected_url = '%s?next=%s' % (settings.LOGIN_URL, url)
+        self.assertRedirects(response, expected_url)
+
+    def test_all_with_some_permissions(self):
+        permission = Permission.objects.get(codename='add_user')
+        self.user.user_permissions.add(permission)
+        self.client.login(username='test', password='foo')
+        url = reverse('all_multiple_permissions')
+        response = self.client.get(url)
+        expected_url = '%s?next=%s' % (settings.LOGIN_URL, url)
+        self.assertRedirects(response, expected_url)
+
+    def test_all_with_all_permissions(self):
+        permissions = list(Permission.objects.filter(codename__in=('add_user', 'change_user')))
+        self.user.user_permissions.add(*permissions)
+        print self.user.user_permissions.all()
+        self.client.login(username='test', password='foo')
+        response = self.client.get(reverse('all_multiple_permissions'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_all_raise_403(self):
+        self.client.login(username='test', password='foo')
+        response = self.client.get(reverse('all_multiple_permissions_403'))
+        self.assertEqual(response.status_code, 403)
+
+    def test_any_with_no_permissions(self):
+        self.client.login(username='test', password='foo')
+        url = reverse('any_multiple_permissions')
+        response = self.client.get(url)
+        expected_url = '%s?next=%s' % (settings.LOGIN_URL, url)
+        self.assertRedirects(response, expected_url)
+
+    def test_any_with_some_permissions(self):
+        permission = Permission.objects.get(codename='add_user')
+        self.user.user_permissions.add(permission)
+        self.client.login(username='test', password='foo')
+        response = self.client.get(reverse('any_multiple_permissions'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_any_raise_403(self):
+        self.client.login(username='test', password='foo')
+        response = self.client.get(reverse('any_multiple_permissions_403'))
+        self.assertEqual(response.status_code, 403)
