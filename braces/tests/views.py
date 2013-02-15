@@ -2,7 +2,7 @@ from django.views.generic import TemplateView
 
 from braces.views import SetHeadlineMixin, LoginRequiredMixin, \
     PermissionRequiredMixin, MultiplePermissionsRequiredMixin, \
-    SuperuserRequiredMixin
+    SuperuserRequiredMixin, StaffuserRequiredMixin
 
 
 class IndexView(TemplateView):
@@ -93,5 +93,14 @@ class SuperuserRequiredView(SuperuserRequiredMixin, TemplateView):
 
 
 class SuperuserRequired403View(SuperuserRequiredMixin, TemplateView):
+    template_name = "braces/headline.html"
+    raise_exception = True
+
+
+class StaffuserRequiredView(StaffuserRequiredMixin, TemplateView):
+    template_name = "braces/headline.html"
+
+
+class StaffuserRequired403View(StaffuserRequiredMixin, TemplateView):
     template_name = "braces/headline.html"
     raise_exception = True

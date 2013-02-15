@@ -153,3 +153,27 @@ class SuperuserRequiredMixinTestCase(TestCase):
         self.client.login(username='test', password='foo')
         response = self.client.get(reverse('superuser_required'))
         self.assertEqual(response.status_code, 200)
+
+
+class StaffuserRequiredMixinTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('test', 'test@example.com', 'foo')
+
+    def test_not_staffuser(self):
+        self.client.login(username='test', password='foo')
+        url = reverse('staffuser_required')
+        response = self.client.get(url)
+        expected_url = '%s?next=%s' % (settings.LOGIN_URL, url)
+        self.assertRedirects(response, expected_url)
+
+    def test_raise_403(self):
+        self.client.login(username='test', password='foo')
+        response = self.client.get(reverse('staffuser_required_403'))
+        self.assertEqual(response.status_code, 403)
+
+    def test_staffuser(self):
+        self.user.is_staff = True
+        self.user.save()
+        self.client.login(username='test', password='foo')
+        response = self.client.get(reverse('staffuser_required'))
+        self.assertEqual(response.status_code, 200)
