@@ -1,8 +1,10 @@
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, FormView
 
 from braces.views import SetHeadlineMixin, LoginRequiredMixin, \
     PermissionRequiredMixin, MultiplePermissionsRequiredMixin, \
-    SuperuserRequiredMixin, StaffuserRequiredMixin
+    SuperuserRequiredMixin, StaffuserRequiredMixin, UserFormKwargsMixin
+
+from .forms import ExampleForm
 
 
 class IndexView(TemplateView):
@@ -104,3 +106,8 @@ class StaffuserRequiredView(StaffuserRequiredMixin, TemplateView):
 class StaffuserRequired403View(StaffuserRequiredMixin, TemplateView):
     template_name = "braces/headline.html"
     raise_exception = True
+
+
+class UserFormKwargsView(UserFormKwargsMixin, FormView):
+    form_class = ExampleForm
+    template_name = "braces/form.html"

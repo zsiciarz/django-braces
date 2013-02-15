@@ -5,6 +5,8 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.test import TestCase
 
+from .forms import ExampleForm
+
 
 class SetHeadlineMixinTestCase(TestCase):
     def test_missing_headline(self):
@@ -177,3 +179,23 @@ class StaffuserRequiredMixinTestCase(TestCase):
         self.client.login(username='test', password='foo')
         response = self.client.get(reverse('staffuser_required'))
         self.assertEqual(response.status_code, 200)
+
+
+class UserKwargModelFormMixinTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('test', 'test@example.com', 'foo')
+
+    def test_user_form(self):
+        form = ExampleForm(user=self.user)
+        self.assertEqual(form.user, self.user)
+
+
+class UserFormKwargsMixinTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('test', 'test@example.com', 'foo')
+
+    def test_user_form(self):
+        self.client.login(username='test', password='foo')
+        response = self.client.get(reverse('user_form_kwargs'))
+        form = response.context['form']
+        self.assertEqual(form.user, self.user)

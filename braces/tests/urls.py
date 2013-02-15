@@ -7,7 +7,7 @@ from .views import IndexView, MissingHeadlineView, StaticHeadlineView, \
     AllMultiplePermissionsView, AllMultiplePermissions403View, \
     AnyMultiplePermissionsView, AnyMultiplePermissions403View, \
     SuperuserRequiredView, SuperuserRequired403View, \
-    StaffuserRequiredView, StaffuserRequired403View
+    StaffuserRequiredView, StaffuserRequired403View, UserFormKwargsView
 
 
 urlpatterns = patterns('',
@@ -36,4 +36,6 @@ urlpatterns = patterns('',
 
     url(r'^staffuser_required/$', StaffuserRequiredView.as_view(), name='staffuser_required'),
     url(r'^staffuser_required_403/$', StaffuserRequired403View.as_view(), name='staffuser_required_403'),
+
+    url(r'^user_form_kwargs/$', UserFormKwargsView.as_view(), name='user_form_kwargs'),
 )
