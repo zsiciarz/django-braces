@@ -8,7 +8,12 @@ from django.test import TestCase
 from .forms import ExampleForm
 
 
-class SetHeadlineMixinTestCase(TestCase):
+class BaseTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('test', 'test@example.com', 'foo')
+
+
+class SetHeadlineMixinTestCase(BaseTestCase):
     def test_missing_headline(self):
         with self.assertRaises(ImproperlyConfigured):
             self.client.get(reverse('missing_headline'))
@@ -24,10 +29,7 @@ class SetHeadlineMixinTestCase(TestCase):
         self.assertEqual(response.context['headline'], "Quick brown fox")
 
 
-class LoginRequiredMixinTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user('test', 'test@example.com', 'foo')
-
+class LoginRequiredMixinTestCase(BaseTestCase):
     def test_anonymous(self):
         url = reverse('login_required')
         response = self.client.get(url)
@@ -40,10 +42,7 @@ class LoginRequiredMixinTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class PermissionRequiredMixinTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user('test', 'test@example.com', 'foo')
-
+class PermissionRequiredMixinTestCase(BaseTestCase):
     def test_missing_permission(self):
         with self.assertRaises(ImproperlyConfigured):
             self.client.get(reverse('missing_permission'))
@@ -72,10 +71,7 @@ class PermissionRequiredMixinTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class MultiplePermissionsRequiredMixinTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user('test', 'test@example.com', 'foo')
-
+class MultiplePermissionsRequiredMixinTestCase(BaseTestCase):
     def test_missing_permissions(self):
         with self.assertRaises(ImproperlyConfigured):
             self.client.get(reverse('missing_multiple_permissions'))
@@ -133,10 +129,7 @@ class MultiplePermissionsRequiredMixinTestCase(TestCase):
         self.assertEqual(response.status_code, 403)
 
 
-class SuperuserRequiredMixinTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user('test', 'test@example.com', 'foo')
-
+class SuperuserRequiredMixinTestCase(BaseTestCase):
     def test_not_superuser(self):
         self.client.login(username='test', password='foo')
         url = reverse('superuser_required')
@@ -157,10 +150,7 @@ class SuperuserRequiredMixinTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class StaffuserRequiredMixinTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user('test', 'test@example.com', 'foo')
-
+class StaffuserRequiredMixinTestCase(BaseTestCase):
     def test_not_staffuser(self):
         self.client.login(username='test', password='foo')
         url = reverse('staffuser_required')
@@ -181,19 +171,13 @@ class StaffuserRequiredMixinTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class UserKwargModelFormMixinTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user('test', 'test@example.com', 'foo')
-
+class UserKwargModelFormMixinTestCase(BaseTestCase):
     def test_user_form(self):
         form = ExampleForm(user=self.user)
         self.assertEqual(form.user, self.user)
 
 
-class UserFormKwargsMixinTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user('test', 'test@example.com', 'foo')
-
+class UserFormKwargsMixinTestCase(BaseTestCase):
     def test_user_form(self):
         self.client.login(username='test', password='foo')
         response = self.client.get(reverse('user_form_kwargs'))
