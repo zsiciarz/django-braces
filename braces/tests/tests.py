@@ -12,6 +12,9 @@ class BaseTestCase(TestCase):
     def setUp(self):
         self.user = User.objects.create_user('test', 'test@example.com', 'foo')
 
+    def log_user_in(self):
+        self.client.login(username='test', password='foo')
+
 
 class SetHeadlineMixinTestCase(BaseTestCase):
     def test_missing_headline(self):
@@ -37,7 +40,7 @@ class LoginRequiredMixinTestCase(BaseTestCase):
         self.assertRedirects(response, expected_url)
 
     def test_authenticated(self):
-        self.client.login(username='test', password='foo')
+        self.log_user_in()
         response = self.client.get(reverse('login_required'))
         self.assertEqual(response.status_code, 200)
 
@@ -52,21 +55,21 @@ class PermissionRequiredMixinTestCase(BaseTestCase):
             self.client.get(reverse('bad_permission'))
 
     def test_user_lacks_permission(self):
-        self.client.login(username='test', password='foo')
+        self.log_user_in()
         url = reverse('add_user_permission')
         response = self.client.get(url)
         expected_url = '%s?next=%s' % (settings.LOGIN_URL, url)
         self.assertRedirects(response, expected_url)
 
     def test_raise_403(self):
-        self.client.login(username='test', password='foo')
+        self.log_user_in()
         response = self.client.get(reverse('add_user_permission_403'))
         self.assertEqual(response.status_code, 403)
 
     def test_user_has_permission(self):
         permission = Permission.objects.get(codename='add_user')
         self.user.user_permissions.add(permission)
-        self.client.login(username='test', password='foo')
+        self.log_user_in()
         response = self.client.get(reverse('add_user_permission'))
         self.assertEqual(response.status_code, 200)
 
@@ -81,7 +84,7 @@ class MultiplePermissionsRequiredMixinTestCase(BaseTestCase):
             self.client.get(reverse('bad_multiple_permissions'))
 
     def test_all_with_no_permissions(self):
-        self.client.login(username='test', password='foo')
+        self.log_user_in()
         url = reverse('all_multiple_permissions')
         response = self.client.get(url)
         expected_url = '%s?next=%s' % (settings.LOGIN_URL, url)
@@ -90,7 +93,7 @@ class MultiplePermissionsRequiredMixinTestCase(BaseTestCase):
     def test_all_with_some_permissions(self):
         permission = Permission.objects.get(codename='add_user')
         self.user.user_permissions.add(permission)
-        self.client.login(username='test', password='foo')
+        self.log_user_in()
         url = reverse('all_multiple_permissions')
         response = self.client.get(url)
         expected_url = '%s?next=%s' % (settings.LOGIN_URL, url)
@@ -100,17 +103,17 @@ class MultiplePermissionsRequiredMixinTestCase(BaseTestCase):
         permissions = list(Permission.objects.filter(codename__in=('add_user', 'change_user')))
         self.user.user_permissions.add(*permissions)
         print self.user.user_permissions.all()
-        self.client.login(username='test', password='foo')
+        self.log_user_in()
         response = self.client.get(reverse('all_multiple_permissions'))
         self.assertEqual(response.status_code, 200)
 
     def test_all_raise_403(self):
-        self.client.login(username='test', password='foo')
+        self.log_user_in()
         response = self.client.get(reverse('all_multiple_permissions_403'))
         self.assertEqual(response.status_code, 403)
 
     def test_any_with_no_permissions(self):
-        self.client.login(username='test', password='foo')
+        self.log_user_in()
         url = reverse('any_multiple_permissions')
         response = self.client.get(url)
         expected_url = '%s?next=%s' % (settings.LOGIN_URL, url)
@@ -119,54 +122,54 @@ class MultiplePermissionsRequiredMixinTestCase(BaseTestCase):
     def test_any_with_some_permissions(self):
         permission = Permission.objects.get(codename='add_user')
         self.user.user_permissions.add(permission)
-        self.client.login(username='test', password='foo')
+        self.log_user_in()
         response = self.client.get(reverse('any_multiple_permissions'))
         self.assertEqual(response.status_code, 200)
 
     def test_any_raise_403(self):
-        self.client.login(username='test', password='foo')
+        self.log_user_in()
         response = self.client.get(reverse('any_multiple_permissions_403'))
         self.assertEqual(response.status_code, 403)
 
 
 class SuperuserRequiredMixinTestCase(BaseTestCase):
     def test_not_superuser(self):
-        self.client.login(username='test', password='foo')
+        self.log_user_in()
         url = reverse('superuser_required')
         response = self.client.get(url)
         expected_url = '%s?next=%s' % (settings.LOGIN_URL, url)
         self.assertRedirects(response, expected_url)
 
     def test_raise_403(self):
-        self.client.login(username='test', password='foo')
+        self.log_user_in()
         response = self.client.get(reverse('superuser_required_403'))
         self.assertEqual(response.status_code, 403)
 
     def test_superuser(self):
         self.user.is_superuser = True
         self.user.save()
-        self.client.login(username='test', password='foo')
+        self.log_user_in()
         response = self.client.get(reverse('superuser_required'))
         self.assertEqual(response.status_code, 200)
 
 
 class StaffuserRequiredMixinTestCase(BaseTestCase):
     def test_not_staffuser(self):
-        self.client.login(username='test', password='foo')
+        self.log_user_in()
         url = reverse('staffuser_required')
         response = self.client.get(url)
         expected_url = '%s?next=%s' % (settings.LOGIN_URL, url)
         self.assertRedirects(response, expected_url)
 
     def test_raise_403(self):
-        self.client.login(username='test', password='foo')
+        self.log_user_in()
         response = self.client.get(reverse('staffuser_required_403'))
         self.assertEqual(response.status_code, 403)
 
     def test_staffuser(self):
         self.user.is_staff = True
         self.user.save()
-        self.client.login(username='test', password='foo')
+        self.log_user_in()
         response = self.client.get(reverse('staffuser_required'))
         self.assertEqual(response.status_code, 200)
 
@@ -179,7 +182,7 @@ class UserKwargModelFormMixinTestCase(BaseTestCase):
 
 class UserFormKwargsMixinTestCase(BaseTestCase):
     def test_user_form(self):
-        self.client.login(username='test', password='foo')
+        self.log_user_in()
         response = self.client.get(reverse('user_form_kwargs'))
         form = response.context['form']
         self.assertEqual(form.user, self.user)
