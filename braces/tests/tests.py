@@ -79,9 +79,17 @@ class MultiplePermissionsRequiredMixinTestCase(BaseTestCase):
         with self.assertRaises(ImproperlyConfigured):
             self.client.get(reverse('missing_multiple_permissions'))
 
-    def test_bad_permissions(self):
+    def test_not_a_dict(self):
         with self.assertRaises(ImproperlyConfigured):
-            self.client.get(reverse('bad_multiple_permissions'))
+            self.client.get(reverse('not_a_dict_multiple_permissions'))
+
+    def test_wrong_keys(self):
+        with self.assertRaises(ImproperlyConfigured):
+            self.client.get(reverse('wrong_keys_multiple_permissions'))
+
+    def test_not_a_list(self):
+        with self.assertRaises(ImproperlyConfigured):
+            self.client.get(reverse('not_a_list_multiple_permissions'))
 
     def test_all_with_no_permissions(self):
         self.log_user_in()

@@ -55,9 +55,23 @@ class MissingMultiplePermissionsView(MultiplePermissionsRequiredMixin, TemplateV
     template_name = "braces/headline.html"
 
 
-class BadMultiplePermissionsView(MultiplePermissionsRequiredMixin, TemplateView):
+class NotADictMultiplePermissionsView(MultiplePermissionsRequiredMixin, TemplateView):
     template_name = "braces/headline.html"
     permissions = ['this.is.not.a.dict']
+
+
+class WrongKeysMultiplePermissionsView(MultiplePermissionsRequiredMixin, TemplateView):
+    template_name = "braces/headline.html"
+    permissions = {
+        'every': ('auth.add_user', 'auth.change_user'),
+    }
+
+
+class NotAListMultiplePermissionsView(MultiplePermissionsRequiredMixin, TemplateView):
+    template_name = "braces/headline.html"
+    permissions = {
+        'all': 'auth.add_user',
+    }
 
 
 class AllMultiplePermissionsView(MultiplePermissionsRequiredMixin, TemplateView):
