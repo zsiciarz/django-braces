@@ -2,7 +2,8 @@ from django.views.generic import TemplateView, FormView
 
 from braces.views import SetHeadlineMixin, LoginRequiredMixin, \
     PermissionRequiredMixin, MultiplePermissionsRequiredMixin, \
-    SuperuserRequiredMixin, StaffuserRequiredMixin, UserFormKwargsMixin
+    SuperuserRequiredMixin, StaffuserRequiredMixin, UserFormKwargsMixin, \
+    CsrfExemptMixin
 
 from .forms import ExampleForm
 
@@ -125,3 +126,10 @@ class StaffuserRequired403View(StaffuserRequiredMixin, TemplateView):
 class UserFormKwargsView(UserFormKwargsMixin, FormView):
     form_class = ExampleForm
     template_name = "braces/form.html"
+
+
+class CsrfExemptView(CsrfExemptMixin, TemplateView):
+    template_name = "braces/headline.html"
+
+    def post(self, request, *args, **kwargs):
+        return self.get(request, *args, **kwargs)

@@ -8,7 +8,8 @@ from .views import IndexView, MissingHeadlineView, StaticHeadlineView, \
     AllMultiplePermissionsView, AllMultiplePermissions403View, \
     AnyMultiplePermissionsView, AnyMultiplePermissions403View, \
     SuperuserRequiredView, SuperuserRequired403View, \
-    StaffuserRequiredView, StaffuserRequired403View, UserFormKwargsView
+    StaffuserRequiredView, StaffuserRequired403View, UserFormKwargsView, \
+    CsrfExemptView
 
 
 urlpatterns = patterns('',
@@ -41,4 +42,6 @@ urlpatterns = patterns('',
     url(r'^staffuser_required_403/$', StaffuserRequired403View.as_view(), name='staffuser_required_403'),
 
     url(r'^user_form_kwargs/$', UserFormKwargsView.as_view(), name='user_form_kwargs'),
+
+    url(r'^csrf_exempt/$', CsrfExemptView.as_view(), name='csrf_exempt'),
 )

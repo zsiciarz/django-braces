@@ -4,6 +4,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.test import TestCase
+from django.test.client import Client
 
 from .forms import ExampleForm
 
@@ -194,3 +195,20 @@ class UserFormKwargsMixinTestCase(BaseTestCase):
         response = self.client.get(reverse('user_form_kwargs'))
         form = response.context['form']
         self.assertEqual(form.user, self.user)
+
+
+class CsrfExemptMixinTestCase(BaseTestCase):
+    def setUp(self):
+        super(CsrfExemptMixinTestCase, self).setUp()
+        self.csrf_client = Client(enforce_csrf_checks=True)
+        self.csrf_client.cookies[settings.CSRF_COOKIE_NAME] = 'csrf'
+
+    def test_correct_csrf_token(self):
+        response = self.csrf_client.post(reverse('csrf_exempt'), {
+            'csrfmiddlewaretoken': 'csrf',
+        })
+        self.assertEqual(response.status_code, 200)
+
+    def test_missing_csrf_token(self):
+        response = self.csrf_client.post(reverse('csrf_exempt'))
+        self.assertEqual(response.status_code, 200)
