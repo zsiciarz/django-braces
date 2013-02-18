@@ -1,3 +1,8 @@
+try:
+    import json
+except ImportError:
+    from django.utils import simplejson as json
+
 from django.conf import settings
 from django.contrib.auth.models import User, Permission
 from django.core.exceptions import ImproperlyConfigured
@@ -212,3 +217,14 @@ class CsrfExemptMixinTestCase(BaseTestCase):
     def test_missing_csrf_token(self):
         response = self.csrf_client.post(reverse('csrf_exempt'))
         self.assertEqual(response.status_code, 200)
+
+
+class JSONResponseMixinTestCase(BaseTestCase):
+    def test_content_type(self):
+        response = self.client.get(reverse('json_response'))
+        self.assertEqual(response['Content-Type'], 'application/json')
+
+    def test_response_contents(self):
+        response = self.client.get(reverse('json_response'))
+        data = json.loads(response.content)
+        self.assertEqual(data['status'], 'ok')

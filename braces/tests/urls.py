@@ -9,7 +9,7 @@ from .views import IndexView, MissingHeadlineView, StaticHeadlineView, \
     AnyMultiplePermissionsView, AnyMultiplePermissions403View, \
     SuperuserRequiredView, SuperuserRequired403View, \
     StaffuserRequiredView, StaffuserRequired403View, UserFormKwargsView, \
-    CsrfExemptView
+    CsrfExemptView, JSONResponseView
 
 
 urlpatterns = patterns('',
@@ -44,4 +44,6 @@ urlpatterns = patterns('',
     url(r'^user_form_kwargs/$', UserFormKwargsView.as_view(), name='user_form_kwargs'),
 
     url(r'^csrf_exempt/$', CsrfExemptView.as_view(), name='csrf_exempt'),
+
+    url(r'^json_response/$', JSONResponseView.as_view(), name='json_response'),
 )

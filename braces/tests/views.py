@@ -3,7 +3,7 @@ from django.views.generic import TemplateView, FormView
 from braces.views import SetHeadlineMixin, LoginRequiredMixin, \
     PermissionRequiredMixin, MultiplePermissionsRequiredMixin, \
     SuperuserRequiredMixin, StaffuserRequiredMixin, UserFormKwargsMixin, \
-    CsrfExemptMixin
+    CsrfExemptMixin, JSONResponseMixin
 
 from .forms import ExampleForm
 
@@ -133,3 +133,12 @@ class CsrfExemptView(CsrfExemptMixin, TemplateView):
 
     def post(self, request, *args, **kwargs):
         return self.get(request, *args, **kwargs)
+
+
+class JSONResponseView(JSONResponseMixin, TemplateView):
+    template_name = "braces/headline.html"
+
+    def get(self, request, *args, **kwargs):
+        return self.render_json_response({
+            'status': 'ok',
+        })
