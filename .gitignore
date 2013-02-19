@@ -2,5 +2,6 @@
 ._*
 *.pyc
 htmlcov/
+.tox/
 *.coverage
 *.egg-info
