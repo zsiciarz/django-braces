@@ -116,7 +116,6 @@ class MultiplePermissionsRequiredMixinTestCase(BaseTestCase):
     def test_all_with_all_permissions(self):
         permissions = list(Permission.objects.filter(codename__in=('add_user', 'change_user')))
         self.user.user_permissions.add(*permissions)
-        print self.user.user_permissions.all()
         self.log_user_in()
         response = self.client.get(reverse('all_multiple_permissions'))
         self.assertEqual(response.status_code, 200)
